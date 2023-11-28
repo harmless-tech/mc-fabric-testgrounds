@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:blasting",
+  "ingredient": {
+    "item": "testgrounds:soaked_gunpowder_cube"
+  },
+  "result": "testgrounds:compressed_gunpowder_block",
+  "count": 1,
+  "experience": 5,
+  "cookingtime": 400
+}

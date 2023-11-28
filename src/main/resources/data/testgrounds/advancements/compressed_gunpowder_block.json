@@ -1,0 +1,41 @@
+{
+  "parent": "minecraft:recipes/root",
+  "display": {
+    "icon": {
+      "item": "testgrounds:compressed_gunpowder_block"
+    },
+    "title": {
+      "translate": "advancement.testgrounds.compressed_gunpowder_block.title"
+    },
+    "description": {
+      "translate": "advancement.testgrounds.compressed_gunpowder_block.desc"
+    },
+    "show_toast": false,
+    "announce_to_chat": false,
+    "hidden": true
+  },
+  "rewards": {
+    "recipes": [
+      "testgrounds:compressed_gunpowder_block"
+    ]
+  },
+  "criteria": {
+    "has_gunpowder": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "testgrounds:soaked_gunpowder_cube"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_gunpowder"
+    ]
+  ]
+}

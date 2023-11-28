@@ -1,0 +1,41 @@
+{
+  "parent": "minecraft:recipes/root",
+  "display": {
+    "icon": {
+      "item": "testgrounds:soaked_gunpowder_cube"
+    },
+    "title": {
+      "translate": "advancement.testgrounds.soaked_gunpowder_cube.title"
+    },
+    "description": {
+      "translate": "advancement.testgrounds.soaked_gunpowder_cube.desc"
+    },
+    "show_toast": false,
+    "announce_to_chat": false,
+    "hidden": true
+  },
+  "rewards": {
+    "recipes": [
+      "testgrounds:soaked_gunpowder_cube"
+    ]
+  },
+  "criteria": {
+    "has_gunpowder": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "testgrounds:loose_gunpowder_clump"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_gunpowder"
+    ]
+  ]
+}

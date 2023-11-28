@@ -1,0 +1,41 @@
+{
+  "parent": "minecraft:recipes/root",
+  "display": {
+    "icon": {
+      "item": "testgrounds:loose_gunpowder_clump"
+    },
+    "title": {
+      "translate": "advancement.testgrounds.loose_gunpowder_clump.title"
+    },
+    "description": {
+      "translate": "advancement.testgrounds.loose_gunpowder_clump.desc"
+    },
+    "show_toast": false,
+    "announce_to_chat": false,
+    "hidden": true
+  },
+  "rewards": {
+    "recipes": [
+      "testgrounds:loose_gunpowder_clump"
+    ]
+  },
+  "criteria": {
+    "has_gunpowder": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "minecraft:gunpowder"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_gunpowder"
+    ]
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "itemGroup.testgrounds.main": "Testgrounds",
+
+  "item.testgrounds.test_item": "Test Item",
+
+  "block.testgrounds.compressed_gunpowder_block": "Compressed Gunpowder Block",
+  "block.testgrounds.compressed_gunpowder_block.tooltip": "Seems kinda dangerous..."
+}

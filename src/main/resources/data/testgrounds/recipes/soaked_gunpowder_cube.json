@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GGG",
+    "GWG",
+    "GGG"
+  ],
+  "key": {
+    "G": {
+      "item": "testgrounds:loose_gunpowder_clump"
+    },
+    "W": {
+      "item": "minecraft:water_bucket"
+    }
+  },
+  "result": {
+    "item": "testgrounds:soaked_gunpowder_cube",
+    "count": 1
+  }
+}
