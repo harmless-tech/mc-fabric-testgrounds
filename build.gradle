@@ -1,6 +1,9 @@
 plugins {
-	id 'fabric-loom' version '1.4-SNAPSHOT'
-	id 'maven-publish'
+	id "fabric-loom" version "1.4-SNAPSHOT"
+	id "maven-publish"
+
+	id "com.diffplug.spotless" version "6.23.0"
+	id "com.github.spotbugs" version "5.2.4"
 }
 
 version = project.mod_version
@@ -46,12 +49,19 @@ sourceSets {
 	main {
 		resources {
 			srcDirs += [
-					'src/main/generated'
+					"src/main/generated"
 			]
 		}
 	}
 }
+
 dependencies {
+	compileOnly "org.jetbrains:annotations:24.1.0"
+
+//	compileOnly "com.github.spotbugs:spotbugs-annotations:${spotbugs.toolVersion.get()}"
+	spotbugsPlugins "com.h3xstream.findsecbugs:findsecbugs-plugin:1.12.0"
+	spotbugsPlugins "com.mebigfatguy.sb-contrib:sb-contrib:7.6.1"
+
 	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
@@ -109,4 +119,18 @@ publishing {
 		// The repositories here will be used for publishing your artifact, not for
 		// retrieving dependencies.
 	}
+}
+
+spotless {
+	java {
+		target "src/*/java/**"
+
+		googleJavaFormat().aosp().reflowLongStrings()
+		formatAnnotations()
+	}
+}
+
+spotbugs {
+	showProgress = true
+	excludeFilter = file("config/spotbugs-exclude.xml")
 }
