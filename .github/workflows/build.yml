@@ -1,5 +1,10 @@
 name: build
-on: [pull_request, push]
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -19,7 +24,9 @@ jobs:
           java-version: ${{ matrix.java }}
           distribution: 'temurin'
       - name: Setup gradle
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v2.10.0
+        with:
+          dependency-graph: generate-and-submit
       - name: Validate gradle wrapper
         uses: gradle/wrapper-validation-action@v1
       - name: Build
