@@ -1,0 +1,44 @@
+{
+	"schemaVersion": 1,
+	"id": "testgrounds",
+	"version": "${version}",
+	"name": "testgrounds",
+	"description": "This is an example description! Tell everyone what your mod is about!",
+	"authors": [
+		"Me!"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/testgrounds/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"tech.harmless.mc.fabric.testgrounds.Testgrounds"
+		],
+		"client": [
+			"tech.harmless.mc.fabric.testgrounds.TestgroundsClient"
+		],
+		"fabric-datagen": [
+			"tech.harmless.mc.fabric.testgrounds.TestgroundsDataGenerator"
+		]
+	},
+	"mixins": [
+		"testgrounds.mixins.json",
+		{
+			"config": "testgrounds.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.14.25",
+		"minecraft": "~1.20.2",
+		"java": ">=17",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
