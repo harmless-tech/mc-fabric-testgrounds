@@ -3,6 +3,11 @@
 
   "item.testgrounds.test_item": "Test Item",
 
+  "item.testgrounds.loose_gunpowder_clump": "Loose Gunpowder Clump",
+
+  "item.testgrounds.soaked_gunpowder_cube": "Soaked Gunpowder Cube",
+  "item.testgrounds.soaked_gunpowder_cube.tooltip": "Too weak to be placed on the ground",
+
   "block.testgrounds.compressed_gunpowder_block": "Compressed Gunpowder Block",
-  "block.testgrounds.compressed_gunpowder_block.tooltip": "Seems kinda dangerous..."
+  "block.testgrounds.compressed_gunpowder_block.tooltip": "\u00A74Seems kinda dangerous..."
 }

@@ -1,15 +1,22 @@
 package tech.harmless.mc.fabric.testgrounds.mixin;
 
-import net.minecraft.server.MinecraftServer;
+import net.minecraft.nbt.NbtCompound;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(MinecraftServer.class)
+@Mixin(NbtCompound.class)
 public class ExampleMixin {
-    @Inject(at = @At("HEAD"), method = "loadWorld")
-    private void init(CallbackInfo info) {
-        // This code is injected into the start of MinecraftServer.loadWorld()V
+
+    private static final Logger LOGGER = LoggerFactory.getLogger("testgrounds");
+
+    @Inject(at = @At("RETURN"), method = "getByte")
+    private void init(String key, CallbackInfoReturnable<Byte> cir) {
+        if (key.equals("Flight")) {
+            LOGGER.info("Flight Byte: " + cir.getReturnValueB());
+        }
     }
 }

@@ -37,7 +37,7 @@ public class BlockCompressedGunpowder extends Block {
         if (!world.isClient) {
             world.removeBlock(pos, false);
             world.createExplosion(
-                    null, pos.getX(), pos.getY(), pos.getZ(), 8, World.ExplosionSourceType.BLOCK);
+                    null, pos.getX(), pos.getY(), pos.getZ(), 9, World.ExplosionSourceType.BLOCK);
         }
     }
 
@@ -130,7 +130,6 @@ public class BlockCompressedGunpowder extends Block {
             List<Text> tooltip,
             TooltipContext options) {
         super.appendTooltip(stack, world, tooltip, options);
-
         tooltip.add(Text.translatable("block.testgrounds.compressed_gunpowder_block.tooltip"));
     }
 }

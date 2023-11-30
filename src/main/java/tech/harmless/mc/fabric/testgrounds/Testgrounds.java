@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 import tech.harmless.mc.fabric.testgrounds.blocks.BlockCompressedGunpowder;
 import tech.harmless.mc.fabric.testgrounds.items.ItemLooseGunpowderClump;
 import tech.harmless.mc.fabric.testgrounds.items.ItemSoakedGunpowderCube;
-import tech.harmless.mc.fabric.testgrounds.items.StaticItems;
+import tech.harmless.mc.fabric.testgrounds.items.rockets.Rocket;
 
 public class Testgrounds implements ModInitializer {
     // This logger is used to write text to the console and the log file.
@@ -31,8 +31,6 @@ public class Testgrounds implements ModInitializer {
         // Proceed with mild caution.
 
         LOGGER.info("Hello Fabric world!");
-
-        StaticItems.init();
 
         Registry.register(
                 Registries.ITEM,
@@ -54,6 +52,8 @@ public class Testgrounds implements ModInitializer {
                 new BlockItem(
                         BlockCompressedGunpowder.BLOCK_COMPRESSED_GUNPOWDER,
                         new FabricItemSettings()));
+
+        Registry.register(Registries.ITEM, new Identifier("testgrounds", "rocket"), Rocket.ROCKET);
 
         Registry.register(
                 Registries.ITEM_GROUP,
