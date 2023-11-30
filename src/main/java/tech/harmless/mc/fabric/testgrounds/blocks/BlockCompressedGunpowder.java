@@ -8,10 +8,13 @@ import net.minecraft.block.Blocks;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.SilkTouchEnchantment;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.BlockView;
@@ -42,12 +45,16 @@ public class BlockCompressedGunpowder extends Block {
     }
 
     private boolean fireBlock(@NotNull BlockState eState) {
-        return eState.isOf(Blocks.FIRE)
-                || eState.isOf(Blocks.SOUL_FIRE)
-                || eState.isOf(Blocks.LAVA)
+        return eState.isOf(Blocks.LAVA)
                 || eState.isOf(Blocks.MAGMA_BLOCK)
+                || eState.isOf(Blocks.FIRE)
+                || eState.isOf(Blocks.SOUL_FIRE)
                 || eState.isOf(Blocks.CAMPFIRE)
-                || eState.isOf(Blocks.SOUL_CAMPFIRE);
+                || eState.isOf(Blocks.SOUL_CAMPFIRE)
+                || eState.isOf(Blocks.TORCH)
+                || eState.isOf(Blocks.WALL_TORCH)
+                || eState.isOf(Blocks.SOUL_TORCH)
+                || eState.isOf(Blocks.SOUL_WALL_TORCH);
     }
 
     @Override
@@ -59,18 +66,20 @@ public class BlockCompressedGunpowder extends Block {
             ItemStack itemStack) {
         super.onPlaced(world, pos, state, placer, itemStack);
 
-        Vec3i[] positions =
-                new Vec3i[] {
-                    new Vec3i(1, 0, 0), new Vec3i(-1, 0, 0),
-                    new Vec3i(0, 1, 0), new Vec3i(0, -1, 0),
-                    new Vec3i(0, 0, 1), new Vec3i(0, 0, -1),
-                };
+        if (world.isClient()) {
+            Vec3i[] positions =
+                    new Vec3i[] {
+                        new Vec3i(1, 0, 0), new Vec3i(-1, 0, 0),
+                        new Vec3i(0, 1, 0), new Vec3i(0, -1, 0),
+                        new Vec3i(0, 0, 1), new Vec3i(0, 0, -1),
+                    };
 
-        for (Vec3i p : positions) {
-            BlockState eState = world.getBlockState(pos.add(p));
-            if (eState != null && fireBlock(eState)) {
-                explode(world, pos);
-                break;
+            for (Vec3i p : positions) {
+                BlockState eState = world.getBlockState(pos.add(p));
+                if (eState != null && fireBlock(eState)) {
+                    explode(world, pos);
+                    break;
+                }
             }
         }
     }
@@ -85,8 +94,45 @@ public class BlockCompressedGunpowder extends Block {
             boolean notify) {
         super.neighborUpdate(state, world, pos, sourceBlock, sourcePos, notify);
 
-        BlockState eState = world.getBlockState(sourcePos);
-        if (eState != null && fireBlock(eState)) explode(world, pos);
+        if (world.isClient()) {
+            BlockState eState = world.getBlockState(sourcePos);
+            if (eState != null && fireBlock(eState)) explode(world, pos);
+        }
+    }
+
+    // TODO: Feather falling boots and slow falling potion?
+    @Override
+    public void onEntityLand(BlockView world, Entity entity) {
+        super.onEntityLand(world, entity);
+
+        if (!entity.getWorld().isClient()) {
+            if (entity.isPlayer()) {
+                var player = (PlayerEntity) entity;
+                if (player.isCreative()) return;
+            }
+
+            if (entity.groundCollision || entity.isOnFire()) {
+                explodeView(entity);
+            }
+        }
+    }
+
+    private void explodeView(Entity entity) {
+        var opt = entity.supportingBlockPos;
+        if (opt.isPresent()) {
+            var pos = opt.get();
+            explode(entity.getWorld(), pos);
+        }
+    }
+
+    @Override
+    public void onProjectileHit(
+            World world, BlockState state, BlockHitResult hit, ProjectileEntity projectile) {
+        super.onProjectileHit(world, state, hit, projectile);
+
+        if (!world.isClient()) {
+            explode(world, hit.getBlockPos());
+        }
     }
 
     @Override
