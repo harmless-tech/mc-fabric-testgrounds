@@ -15,7 +15,7 @@ public class ExampleMixin {
 
     @Inject(at = @At("RETURN"), method = "getByte")
     private void init(String key, CallbackInfoReturnable<Byte> cir) {
-        if (key.equals("Flight")) {
+        if ("Flight".equals(key)) {
             LOGGER.info("Flight Byte: " + cir.getReturnValueB());
         }
     }

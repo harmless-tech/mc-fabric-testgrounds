@@ -1,9 +1,9 @@
 {
   "type": "minecraft:blasting",
   "ingredient": {
-    "item": "testgrounds:soaked_gunpowder_cube"
+    "item": "testgrounds:damp_nether_powder"
   },
-  "result": "testgrounds:compressed_gunpowder_block",
+  "result": "testgrounds:nether_powder_block",
   "count": 1,
   "experience": 5,
   "cookingtime": 400

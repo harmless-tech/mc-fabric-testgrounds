@@ -5,9 +5,9 @@
 
   "item.testgrounds.loose_gunpowder_clump": "Loose Gunpowder Clump",
 
-  "item.testgrounds.soaked_gunpowder_cube": "Soaked Gunpowder Cube",
-  "item.testgrounds.soaked_gunpowder_cube.tooltip": "Too weak to be placed on the ground",
+  "item.testgrounds.damp_nether_powder": "Damp Nether Powder",
+  "item.testgrounds.damp_nether_powder.tooltip": "Holds Potential...",
 
-  "block.testgrounds.compressed_gunpowder_block": "Compressed Gunpowder Block",
-  "block.testgrounds.compressed_gunpowder_block.tooltip": "\u00A74Seems kinda dangerous..."
+  "block.testgrounds.nether_powder_block": "Nether Powder Block",
+  "block.testgrounds.nether_powder_block.tooltip": "\u00A74Seems kinda dangerous..."
 }

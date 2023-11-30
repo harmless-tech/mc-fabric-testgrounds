@@ -2,13 +2,13 @@
   "parent": "minecraft:recipes/root",
   "display": {
     "icon": {
-      "item": "testgrounds:soaked_gunpowder_cube"
+      "item": "testgrounds:damp_nether_powder"
     },
     "title": {
-      "translate": "advancement.testgrounds.soaked_gunpowder_cube.title"
+      "translate": "advancement.testgrounds.damp_nether_powder.title"
     },
     "description": {
-      "translate": "advancement.testgrounds.soaked_gunpowder_cube.desc"
+      "translate": "advancement.testgrounds.damp_nether_powder.desc"
     },
     "show_toast": false,
     "announce_to_chat": false,
@@ -16,7 +16,7 @@
   },
   "rewards": {
     "recipes": [
-      "testgrounds:soaked_gunpowder_cube"
+      "testgrounds:damp_nether_powder"
     ]
   },
   "criteria": {

@@ -9,12 +9,11 @@ import net.minecraft.text.Text;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class ItemSoakedGunpowderCube extends Item {
+public class ItemDampNetherPowder extends Item {
 
-    public static final ItemSoakedGunpowderCube SOAKED_GUNPOWDER_CUBE =
-            new ItemSoakedGunpowderCube();
+    public static final ItemDampNetherPowder DAMP_NETHER_POWDER = new ItemDampNetherPowder();
 
-    public ItemSoakedGunpowderCube() {
+    public ItemDampNetherPowder() {
         super(new FabricItemSettings());
     }
 
@@ -22,6 +21,6 @@ public class ItemSoakedGunpowderCube extends Item {
     public void appendTooltip(
             ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
-        tooltip.add(Text.translatable("item.testgrounds.soaked_gunpowder_cube.tooltip"));
+        tooltip.add(Text.translatable("item.testgrounds.damp_nether_powder.tooltip"));
     }
 }

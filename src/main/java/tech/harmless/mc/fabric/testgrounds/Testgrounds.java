@@ -13,9 +13,9 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import tech.harmless.mc.fabric.testgrounds.blocks.BlockCompressedGunpowder;
+import tech.harmless.mc.fabric.testgrounds.blocks.BlockNetherPowder;
+import tech.harmless.mc.fabric.testgrounds.items.ItemDampNetherPowder;
 import tech.harmless.mc.fabric.testgrounds.items.ItemLooseGunpowderClump;
-import tech.harmless.mc.fabric.testgrounds.items.ItemSoakedGunpowderCube;
 import tech.harmless.mc.fabric.testgrounds.items.rockets.Rocket;
 
 public class Testgrounds implements ModInitializer {
@@ -39,19 +39,17 @@ public class Testgrounds implements ModInitializer {
 
         Registry.register(
                 Registries.ITEM,
-                new Identifier("testgrounds", "soaked_gunpowder_cube"),
-                ItemSoakedGunpowderCube.SOAKED_GUNPOWDER_CUBE);
+                new Identifier("testgrounds", "damp_nether_powder"),
+                ItemDampNetherPowder.DAMP_NETHER_POWDER);
 
         Registry.register(
                 Registries.BLOCK,
-                new Identifier("testgrounds", "compressed_gunpowder_block"),
-                BlockCompressedGunpowder.BLOCK_COMPRESSED_GUNPOWDER);
+                new Identifier("testgrounds", "nether_powder_block"),
+                BlockNetherPowder.BLOCK_NETHER_POWDER);
         Registry.register(
                 Registries.ITEM,
-                new Identifier("testgrounds", "compressed_gunpowder_block"),
-                new BlockItem(
-                        BlockCompressedGunpowder.BLOCK_COMPRESSED_GUNPOWDER,
-                        new FabricItemSettings()));
+                new Identifier("testgrounds", "nether_powder_block"),
+                new BlockItem(BlockNetherPowder.BLOCK_NETHER_POWDER, new FabricItemSettings()));
 
         Registry.register(Registries.ITEM, new Identifier("testgrounds", "rocket"), Rocket.ROCKET);
 

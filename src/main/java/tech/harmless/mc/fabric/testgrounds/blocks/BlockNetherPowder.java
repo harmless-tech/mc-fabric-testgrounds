@@ -5,15 +5,18 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.FallingBlock;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.SilkTouchEnchantment;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
@@ -22,25 +25,39 @@ import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tech.harmless.mc.fabric.testgrounds.Config;
 
 // TODO: Get BlockItem!
-public class BlockCompressedGunpowder extends Block {
+public class BlockNetherPowder extends FallingBlock {
 
-    public static final Block BLOCK_COMPRESSED_GUNPOWDER = new BlockCompressedGunpowder();
+    public static final Block BLOCK_NETHER_POWDER = new BlockNetherPowder();
 
-    public BlockCompressedGunpowder() {
-        super(BlockCompressedGunpowder.settings());
+    private static final Identifier ALLOWED_DIM = new Identifier("minecraft", "the_nether");
+    private static final Vec3i[] TEST_POSITIONS =
+            new Vec3i[] { // TODO: Include adjacent positions?
+                new Vec3i(1, 0, 0), new Vec3i(-1, 0, 0),
+                new Vec3i(0, 1, 0), new Vec3i(0, -1, 0),
+                new Vec3i(0, 0, 1), new Vec3i(0, 0, -1),
+            };
+
+    public BlockNetherPowder() {
+        super(BlockNetherPowder.settings());
     }
 
     @NotNull private static FabricBlockSettings settings() {
-        return FabricBlockSettings.copyOf(Blocks.TNT);
+        return FabricBlockSettings.copyOf(Blocks.SAND);
     }
 
     private void explode(World world, BlockPos pos) {
         if (!world.isClient) {
             world.removeBlock(pos, false);
             world.createExplosion(
-                    null, pos.getX(), pos.getY(), pos.getZ(), 9, World.ExplosionSourceType.BLOCK);
+                    null,
+                    pos.getX(),
+                    pos.getY(),
+                    pos.getZ(),
+                    Config.NETHER_POWDER_BLOCK_EXPLOSION_POWER,
+                    World.ExplosionSourceType.BLOCK);
         }
     }
 
@@ -64,24 +81,15 @@ public class BlockCompressedGunpowder extends Block {
             BlockState state,
             @Nullable LivingEntity placer,
             ItemStack itemStack) {
+        testExplode(world, pos);
         super.onPlaced(world, pos, state, placer, itemStack);
+    }
 
-        if (world.isClient()) {
-            Vec3i[] positions =
-                    new Vec3i[] {
-                        new Vec3i(1, 0, 0), new Vec3i(-1, 0, 0),
-                        new Vec3i(0, 1, 0), new Vec3i(0, -1, 0),
-                        new Vec3i(0, 0, 1), new Vec3i(0, 0, -1),
-                    };
-
-            for (Vec3i p : positions) {
-                BlockState eState = world.getBlockState(pos.add(p));
-                if (eState != null && fireBlock(eState)) {
-                    explode(world, pos);
-                    break;
-                }
-            }
-        }
+    @Override
+    public void onBlockAdded(
+            BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
+        testExplode(world, pos);
+        super.onBlockAdded(state, world, pos, oldState, notify);
     }
 
     @Override
@@ -92,29 +100,71 @@ public class BlockCompressedGunpowder extends Block {
             Block sourceBlock,
             BlockPos sourcePos,
             boolean notify) {
-        super.neighborUpdate(state, world, pos, sourceBlock, sourcePos, notify);
-
-        if (world.isClient()) {
+        if (!world.isClient()) {
             BlockState eState = world.getBlockState(sourcePos);
             if (eState != null && fireBlock(eState)) explode(world, pos);
         }
+
+        super.neighborUpdate(state, world, pos, sourceBlock, sourcePos, notify);
     }
 
-    // TODO: Feather falling boots and slow falling potion?
+    private void testExplode(World world, BlockPos pos) {
+        if (!world.isClient() && !world.getDimensionKey().getValue().equals(ALLOWED_DIM)) {
+            var temp = world.getBiome(pos).value().getTemperature();
+            if (temp >= 2f) {
+                explode(world, pos);
+            } else {
+                for (Vec3i p : TEST_POSITIONS) {
+                    BlockState eState = world.getBlockState(pos.add(p));
+                    if (eState != null && fireBlock(eState)) {
+                        explode(world, pos);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
     @Override
     public void onEntityLand(BlockView world, Entity entity) {
-        super.onEntityLand(world, entity);
+        if (!entity.getWorld().isClient() && entity.isOnGround()) {
+            if (entity.isOnFire()) {
+                explodeView(entity);
+            }
 
-        if (!entity.getWorld().isClient()) {
             if (entity.isPlayer()) {
                 var player = (PlayerEntity) entity;
                 if (player.isCreative()) return;
+
+                // Check for feather falling
+                boolean feather = false;
+                for (var arm : player.getArmorItems()) {
+                    for (var en : EnchantmentHelper.get(arm).keySet()) {
+                        if (en.equals(Enchantments.FEATHER_FALLING)) {
+                            feather = true;
+                            break;
+                        }
+                    }
+                }
+                if (feather) return;
             }
 
-            if (entity.groundCollision || entity.isOnFire()) {
-                explodeView(entity);
+            // Check for slow falling
+            if (entity instanceof LivingEntity e) {
+                boolean slowFall = false;
+                for (var eff : e.getStatusEffects()) {
+                    if (eff.getEffectType().equals(StatusEffects.SLOW_FALLING)) {
+                        slowFall = true;
+                        break;
+                    }
+                }
+                if (slowFall) return;
             }
+
+            explodeView(entity);
         }
+
+        super.onEntityLand(world, entity);
     }
 
     private void explodeView(Entity entity) {
@@ -128,18 +178,17 @@ public class BlockCompressedGunpowder extends Block {
     @Override
     public void onProjectileHit(
             World world, BlockState state, BlockHitResult hit, ProjectileEntity projectile) {
-        super.onProjectileHit(world, state, hit, projectile);
-
         if (!world.isClient()) {
             explode(world, hit.getBlockPos());
         }
+
+        super.onProjectileHit(world, state, hit, projectile);
     }
 
     @Override
     public void onDestroyedByExplosion(World world, BlockPos pos, Explosion explosion) {
+        if (!world.isClient()) explode(world, pos);
         super.onDestroyedByExplosion(world, pos, explosion);
-
-        if (!world.isClient) explode(world, pos);
     }
 
     @Override
@@ -154,7 +203,7 @@ public class BlockCompressedGunpowder extends Block {
             var item = player.getInventory().getMainHandStack();
             if (item != null) {
                 for (var en : EnchantmentHelper.get(item).keySet()) {
-                    if (en instanceof SilkTouchEnchantment) {
+                    if (en.equals(Enchantments.SILK_TOUCH)) {
                         silk = true;
                         break;
                     }
@@ -176,6 +225,6 @@ public class BlockCompressedGunpowder extends Block {
             List<Text> tooltip,
             TooltipContext options) {
         super.appendTooltip(stack, world, tooltip, options);
-        tooltip.add(Text.translatable("block.testgrounds.compressed_gunpowder_block.tooltip"));
+        tooltip.add(Text.translatable("block.testgrounds.nether_powder_block.tooltip"));
     }
 }

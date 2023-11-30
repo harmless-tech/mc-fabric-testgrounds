@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "testgrounds:compressed_gunpowder_block"
+          "name": "testgrounds:nether_powder_block"
         }
       ],
       "conditions": []

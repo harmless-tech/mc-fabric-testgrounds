@@ -3,7 +3,7 @@ plugins {
 	id "maven-publish"
 
 	id "com.diffplug.spotless" version "6.23.0"
-	id "com.github.spotbugs" version "5.2.4"
+	id "com.github.spotbugs" version "5.2.5"
 }
 
 version = project.mod_version
@@ -127,6 +127,29 @@ publishing {
 	}
 }
 
+spotbugs {
+	showProgress = true
+	excludeFilter = file("config/spotbugs-exclude.xml")
+}
+
+spotbugsMain {
+	reports {
+		html {
+			enabled = true
+			stylesheet = "fancy-hist.xsl"
+		}
+	}
+}
+
+spotbugsClient {
+	reports {
+		html {
+			enabled = true
+			stylesheet = "fancy-hist.xsl"
+		}
+	}
+}
+
 spotless {
 	java {
 		target "src/*/java/**"
@@ -137,9 +160,4 @@ spotless {
 	json {
 		target "src/*/resources/**.json"
 	}
-}
-
-spotbugs {
-	showProgress = true
-	excludeFilter = file("config/spotbugs-exclude.xml")
 }

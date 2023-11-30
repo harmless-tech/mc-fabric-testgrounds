@@ -2,13 +2,13 @@
   "parent": "minecraft:recipes/root",
   "display": {
     "icon": {
-      "item": "testgrounds:compressed_gunpowder_block"
+      "item": "testgrounds:nether_powder_block"
     },
     "title": {
-      "translate": "advancement.testgrounds.compressed_gunpowder_block.title"
+      "translate": "advancement.testgrounds.nether_powder_block.title"
     },
     "description": {
-      "translate": "advancement.testgrounds.compressed_gunpowder_block.desc"
+      "translate": "advancement.testgrounds.nether_powder_block.desc"
     },
     "show_toast": false,
     "announce_to_chat": false,
@@ -16,7 +16,7 @@
   },
   "rewards": {
     "recipes": [
-      "testgrounds:compressed_gunpowder_block"
+      "testgrounds:nether_powder_block"
     ]
   },
   "criteria": {
@@ -26,7 +26,7 @@
         "items": [
           {
             "items": [
-              "testgrounds:soaked_gunpowder_cube"
+              "testgrounds:damp_nether_powder"
             ]
           }
         ]
